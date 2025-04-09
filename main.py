@@ -1,13 +1,20 @@
-users:list=[
-    {"name":"Kaja","location":"Tomaszów Lub.","posts":69},
-    {"name":"Wiktoria","location":"Chełm.","posts":6},
-    {"name":"Sabina","location":"Opole","posts":110},
-    {"name":"Weronika","location":"Tomaszów Maz.","posts":350},
-    {"name":"Oliwka","location":"Warszawa","posts":420},
+from utils.model import users
+from utils.controller import get_user_info, add_user
 
-]
+def main():
+    print(f"Witaj {users[0]["name"]},")
 
-print(f"Witaj {users[0]["name"]}")
+    while True:
+        print("==============MENU==============")
+        print("0 - Zakończ pracę programu")
+        print("1 - Pokaż, co u moich znajomych")
+        print("2 - Dodaj znajomego")
+        print("============================")
+        choice:str=input("Wybierz opcję MENU: ")
+        if choice == "0": break
+        if choice == "1": get_user_info(users[1:])
+        if choice == "2": add_user(users)
 
-for user in users:
-    print(f"Twój znajomy {user["name"]} z {user["location"]} opublikował(a) {user["posts"]} postów.")
+
+if __name__ == "__main__":
+    main()
