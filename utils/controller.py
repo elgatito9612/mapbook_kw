@@ -9,4 +9,10 @@ def add_user (users_data: list)->None:
     new_posts=input("podaj ilośc postów: ")
     users_data.append({"name": new_name, "location": new_location, "posts": new_posts})
 
-    add_user(users_data)
+
+
+def remove_user(users_data: list[dict]) -> None:
+    user_name=input("Podaj znajomego do usunięcia: ")
+    for user in users_data:
+        if user["name"] == user_name:
+            users_data.remove(user)
