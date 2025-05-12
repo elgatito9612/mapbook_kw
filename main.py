@@ -3,6 +3,82 @@ from tkinter import *
 import tkintermapview
 from tkintermapview import TkinterMapView
 
+users:list = [{"name": "Kaja", "surname": "Wawrzusiszyn", "location": "Tomaszów Lubelski", "posts": 69}]
+
+def add_user():
+    imie = entry_name.get()
+    nazwisko = entry_surname.get()
+    posty = entry_posts.get()
+    miejscowosc = entry_location.get()
+    users.append(
+        {
+            "name": imie, "surname": nazwisko, "location": miejscowosc, "posts": posty
+        })
+    print(users)
+    entry_name.delete(0, END)
+    entry_surname.delete(0, END)
+    entry_posts.delete(0, END)
+    entry_location.delete(0, END)
+    entry_name.focus()
+    show_users()
+
+def show_users():
+    listbox_lista_obiektow.delete(0, END)
+    for idx,user in enumerate(users):
+        listbox_lista_obiektow.insert(idx, f"{idx+1}. {user["name"]}, {user["surname"]}, {user["location"]}, {user["posts"]}")
+
+
+def delete_user():
+    idx=listbox_lista_obiektow.index(ACTIVE)
+    users.pop(idx)
+    show_users()
+
+def user_details():
+    idx=listbox_lista_obiektow.index(ACTIVE)
+    label_name_szczegoly_obiektow_wartosc.configure(text=users[idx]["name"])
+    label_surname_szczegoly_obiektow_wartosc.configure(text=users[idx]["surname"])
+    label_posts_szczegoly_obiektow_wartosc.configure(text=users[idx]["posts"])
+    label_location_szczegoly_obiektow_wartosc.configure(text=users[idx]["location"])
+
+def edit_user():
+    idx=listbox_lista_obiektow.index(ACTIVE)
+    entry_name.insert(0, users[idx]["name"])
+    entry_surname.insert(0, users[idx]["surname"])
+    entry_posts.insert(0, users[idx]["posts"])
+    entry_location.insert(0, users[idx]["location"])
+
+    button_dodaj_obiekt.configure(text="Zapisz", command=lambda:update_user(idx))
+
+def update_user(idx):
+    name=entry_name.get()
+    surname=entry_surname.get()
+    location=entry_location.get()
+    posts=entry_posts.get()
+
+    users[idx]["name"]=name
+    users[idx]["surname"]=surname
+    users[idx]["location"]=location
+    users[idx]["posts"]=posts
+
+    button_dodaj_obiekt.configure(text="Dodaj", command=add_user)
+    show_users()
+
+    entry_name.delete(0, END)
+    entry_surname.delete(0, END)
+    entry_posts.delete(0, END)
+    entry_location.delete(0, END)
+    entry_name.focus()
+
+
+
+
+
+
+
+
+
+
+
 root = Tk()
 root.title("Mapbook_kw")
 root.geometry("1024x768")
@@ -17,18 +93,18 @@ ramka_mapa=Frame(root)
 ramka_lista_obiektow.grid(row=0, column=0)
 ramka_formularz.grid(row=0, column=1)
 ramka_szczegoly_obiektow.grid(row=1, column=0)
-ramka_mapa.grid(row=2, column=0)
+ramka_mapa.grid(row=2, column=0, columnspan=2)
 
 # RAMKA LISTA OBIEKTÓW
 label_lista_obiektow=Label(ramka_lista_obiektow, text="Lista obiektów: ")
 label_lista_obiektow.grid(row=0, column=0, columnspan=3)
 listbox_lista_obiektow=Listbox(ramka_lista_obiektow, width=50, height=10)
 listbox_lista_obiektow.grid(row=1, column=0, columnspan=3)
-button_pokaz_szczegoly=Button(ramka_lista_obiektow, text="Pokaż szczegóły")
+button_pokaz_szczegoly=Button(ramka_lista_obiektow, text="Pokaż szczegóły", command=user_details)
 button_pokaz_szczegoly.grid(row=2, column=0)
-button_edytuj_obiekt=Button(ramka_lista_obiektow, text="Edytuj obiekt")
+button_edytuj_obiekt=Button(ramka_lista_obiektow, text="Edytuj obiekt", command=edit_user)
 button_edytuj_obiekt.grid(row=2, column=1)
-button_usun_obiekt=Button(ramka_lista_obiektow, text="Usuń obiekt")
+button_usun_obiekt=Button(ramka_lista_obiektow, text="Usuń obiekt", command=delete_user)
 button_usun_obiekt.grid(row=2, column=2)
 
 # RAMKA FORMULARZ
@@ -51,7 +127,7 @@ entry_posts=Entry(ramka_formularz)
 entry_posts.grid(row=3, column=1)
 entry_location=Entry(ramka_formularz)
 entry_location.grid(row=4, column=1)
-button_dodaj_obiekt=Button(ramka_formularz, text="Dodaj ")
+button_dodaj_obiekt=Button(ramka_formularz, text="Dodaj ", command=add_user)
 button_dodaj_obiekt.grid(row=5, column=1, columnspan=2)
 
 
@@ -80,10 +156,10 @@ label_location_szczegoly_obiektow_wartosc=Label(ramka_szczegoly_obiektow, text="
 label_location_szczegoly_obiektow_wartosc.grid(row=1, column=7)
 
 # RAMKA MAPA
-# map_widget=tkintermapview.TkinterMapView(ramka_mapa, width=1024, height=400)
-# map_widget.set_position(52.23, 21)
-# map_widget.set_zoom(5)
-# map_widget.grid(row=0, column=0, columnspan=8)
+map_widget=tkintermapview.TkinterMapView(ramka_mapa, width=1024, height=400)
+map_widget.set_position(52.23, 21)
+map_widget.set_zoom(5)
+map_widget.grid(row=0, column=0, columnspan=8)
 
 
 
